@@ -1,18 +1,21 @@
 import { defineConfig } from "vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
-import viteTsConfigPaths from "vite-tsconfig-paths";
+import viteReact from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
+import tsConfigPaths from "vite-tsconfig-paths";
+import { nitro } from "nitro/vite";
 
 export default defineConfig({
-  server: {
-    port: 5173,
-  },
   plugins: [
-    viteTsConfigPaths({ projects: ["./tsconfig.json"] }),
+    tsConfigPaths({ projects: ["./tsconfig.json"] }),
     tailwindcss(),
     tanstackStart({
-      target: "vercel", // <-- Vercel Node runtime
       customViteReactPlugin: true,
+      server: { entry: "server" },
     }),
+    nitro({
+      preset: "vercel",
+    }),
+    viteReact(),
   ],
 });
